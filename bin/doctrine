@@ -1,0 +1,32 @@
+#!/usr/bin/env php
+<?php declare(strict_types=1)
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+use Dotenv\Dotenv;
+use Doctrine\ORM\Tools\Console\ConsoleRunner;
+use Doctrine\ORM\Tools\Console\EntityManagerProvider\SingleManagerProvider;
+use Doctrine\DBAL\Tools\DsnParser;
+use App\Factories\DbalConnectionFactory;
+use App\Factories\EntityManagerFactory;
+
+
+$dotEnv = Dotenv::createImmutable(__DIR__ . '/../');
+$dotEnv->load();
+
+$dsnParser = new DsnParser([
+    'mysql' => 'pdo_mysql'
+]);
+
+$entityManagerFactory = new EntityManagerFactory;
+$dbalConnectionFactory = new DbalConnectionFactory;
+
+$entityManager = $entityManagerFactory->getEntityManager(
+    dbalConn: $dbalConnectionFactory,
+    dsnParser: $dsnParser,
+    dbUrl: $_ENV['DB_URL']
+);
+
+ConsoleRunner::run(
+    new SingleManagerProvider($entityManager),
+);

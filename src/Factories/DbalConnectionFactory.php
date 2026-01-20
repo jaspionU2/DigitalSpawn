@@ -5,6 +5,9 @@ namespace App\Factories;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Tools\DsnParser;
+use Dotenv\Dotenv;
+use Dotenv\Exception\InvalidFileException;
+use Dotenv\Exception\InvalidPathException;
 
 class DbalConnectionFactory
 {
@@ -15,7 +18,7 @@ class DbalConnectionFactory
      * @return \Doctrine\DBAL\Connection
      * @throws \Doctrine\DBAL\Exception\MalformedDsnException
      */
-    public function getDbalConnection(
+    public static function getDbalConnection(
         string|array $params, 
         DsnParser|null $dsnParser
     ) : Connection {
@@ -24,6 +27,36 @@ class DbalConnectionFactory
             $connectionParams = $dsnParser->parse(dsn: $params);
         }
         return DriverManager::getConnection($connectionParams);
+    }
+
+    /**
+     * Carrega as configurações de conexão com o banco de dados.
+     * 
+     * Prioridade de carregamento:
+     * 1. Configurações definidas via método configure()
+     * 2. Variável de ambiente DB_URL do arquivo .env
+     * 3. Configuração padrão SQLite (fallback)
+     *
+     * @return array|string Array com parâmetros de conexão ou string DSN
+     */
+    public static function loadDatabaseConfig(?array $config = null): array|string
+    {
+        $pathDir = dirname(__DIR__, 2);
+        try {
+            $dotenv = Dotenv::createImmutable(paths: $pathDir);
+            $dotenv->load();
+
+            if (!empty($_ENV['DB_URL'])) {
+                return $_ENV['DB_URL'];
+            }
+        } catch (InvalidFileException | InvalidPathException) {
+            // Fall through to default SQLite configuration
+        }
+
+        return [
+            'driver' => 'pdo_sqlite',
+            'path'   => $pathDir . '/database.db'
+        ];
     }
 }
 ?>

@@ -1,6 +1,6 @@
-<?php
+<?php declare(strict_types=1);
 
-namespace App\Models\UserModel;
+namespace App\Models;
 
 use DateTime;
 use Doctrine\DBAL\Schema\DefaultExpression\CurrentTimestamp;
@@ -10,8 +10,10 @@ use Doctrine\DBAL\Types\Types;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'user')]
-class UserModel
+class UserModel extends Model
 {
+    protected array $fillable = ['name', 'email', 'password_hash'];
+
     #[ORM\Id]
     #[ORM\Column(name: 'user_id', type: Types::INTEGER)]
     #[ORM\GeneratedValue()]
@@ -55,13 +57,18 @@ class UserModel
     }
 
 
-    public function setName(string $name) : string|null
+    public function setName(string $name) : void
     {
-       return $this->name = $name;
+       $this->name = $name;
     }
 
-    public function setEmail(string $email) : string|null
+    public function setEmail(string $email) : void
     {
-        return $this->email = $email;
+        $this->email = $email;
+    }
+
+    public function setPassword(string $password): void
+    {
+        $this->password_hash = $password;
     }
 }

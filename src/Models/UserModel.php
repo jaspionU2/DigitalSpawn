@@ -6,8 +6,6 @@ use DateTime;
 use Doctrine\DBAL\Schema\DefaultExpression\CurrentTimestamp;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\DBAL\Types\Types;
-
-
 #[ORM\Entity]
 #[ORM\Table(name: 'user')]
 class UserModel extends Model
@@ -17,19 +15,19 @@ class UserModel extends Model
     #[ORM\Id]
     #[ORM\Column(name: 'user_id', type: Types::INTEGER)]
     #[ORM\GeneratedValue()]
-    private ?int $id = null;
+    protected ?int $id = null;
 
     #[ORM\Column(name: 'user_name', type: Types::STRING)]
-    private string $name;
+    protected string $name;
 
     #[ORM\Column(name: 'user_email', type: Types::STRING, unique: true)]
-    private string $email;
+    protected string $email;
 
     #[ORM\Column(name: 'user_password', type: Types::STRING)]
-    private string $password_hash;
+    protected string $password_hash;
     
     #[ORM\Column(name: 'created_at', type: Types::DATETIME_MUTABLE, options: ['default' => new CurrentTimestamp()], insertable: false, updatable: false)]
-    private DateTime $created_at;
+    protected DateTime $created_at;
 
     public function getId() : int|null
     {

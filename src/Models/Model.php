@@ -4,30 +4,159 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use JsonSerializable;
+use ReflectionClass;
+use ReflectionException;
+
+/**
+ * Classe base para todas as Models do sistema.
+ * 
+ * Fornece funcionalidades comuns como atribuição em massa,
+ * métodos mágicos para getters/setters e proteção de atributos.
+ */
 class Model
 {
     /**
+     * Lista de atributos que podem ser preenchidos via atribuição em massa.
+     * 
+     * Defina os nomes dos atributos que são seguros para serem
+     * preenchidos automaticamente pelo método create().
+     * 
      * @var array<int, string>
      */
     protected array $fillable = [];
+
+    /**
+     * Lista de atributos protegidos contra atribuição em massa.
+     * 
+     * Atributos listados aqui não poderão ser preenchidos
+     * automaticamente, mesmo que estejam em $fillable.
+     * 
+     * @var array<int, string>
+     */
+    protected array $guarded = ['*'];
+
+    /**
+     * Armazena os valores dos atributos da model.
+     * 
+     * Array associativo onde a chave é o nome do atributo
+     * e o valor é o dado armazenado.
+     * 
+     * @var array<string, mixed>
+     */
     protected array $attributes = [];
 
-
-    protected function isFillable(string $key) : bool
+    /**
+     * Método mágico para definir o valor de um atributo.
+     * 
+     * Quando um atributo é definido (ex: $model->nome = 'valor'),
+     * este método verifica se existe um setter personalizado (setNome)
+     * e o executa. O valor é sempre armazenado em $attributes.
+     * 
+     * @param string $name  Nome do atributo a ser definido.
+     * @param mixed  $value Valor a ser atribuído.
+     * 
+     * @return void
+     */
+    public function __set($name, $value): void
     {
-        if (array_key_exists($key, $this->fillable)) {
+        $reflectionClass = new ReflectionClass($this::class);
+
+        $methodName = 'set' . ucwords($name);
+        if ($reflectionClass->hasMethod($methodName)) {
+            try {
+                $method = $reflectionClass->getMethod('set' . ucwords($name));
+                $method->invoke(
+                    $reflectionClass->newInstance(),
+                    $value
+                );
+                $this->attributes[$name] = $value;
+            } catch (ReflectionException) {
+            }
+        }
+
+        $this->attributes[$name] = $value;
+    }
+
+    /**
+     * Método mágico para obter o valor de um atributo.
+     * 
+     * Quando um atributo é acessado (ex: $model->nome),
+     * este método verifica se existe um getter personalizado (getNome)
+     * e o executa. Caso contrário, retorna o valor de $attributes.
+     * 
+     * @param string $name Nome do atributo a ser obtido.
+     * 
+     * @return mixed Valor do atributo ou null se não existir.
+     */
+    public function __get($name): mixed
+    {
+        $reflectionClass = new ReflectionClass($this::class);
+        $methodName = 'get' . ucwords($name);
+        if ($reflectionClass->hasMethod($methodName)) {
+            try {
+                $method = $reflectionClass->getMethod($methodName);
+                $result = $method->invoke(
+                    $reflectionClass->newInstance()
+                );
+                return $result;
+            } catch (ReflectionException) {
+            }
+        }
+
+        return $this->attributes[$name] ?? null;
+    }
+
+    /**
+     * Verifica se um atributo pode ser preenchido via atribuição em massa.
+     * 
+     * Consulta o array $fillable para determinar se o atributo
+     * informado está na lista de atributos permitidos.
+     * 
+     * @param string $value Nome do atributo a ser verificado.
+     * 
+     * @return bool True se o atributo pode ser preenchido, false caso contrário.
+     */
+    protected function isFillable(string $value): bool
+    {
+        if (!in_array('*', $this->guarded) && empty($this->fillable)) $this->guarded[] = '*';
+
+        if (in_array('*', $this->guarded)) {
+            return in_array($value, $this->fillable);
+        }
+
+        if (in_array($value, $this->fillable)) {
             return true;
         }
 
-        return false;
+        return !in_array($value, $this->guarded);
     }
 
-    protected static function filter(array $dados) : array
+    /**
+     * Cria uma nova instância da model com os dados fornecidos.
+     * 
+     * Percorre o array de dados e preenche apenas os atributos
+     * que estão definidos em $fillable (atribuição em massa segura).
+     * Utiliza late static binding para criar a instância correta
+     * quando chamado a partir de classes filhas.
+     * 
+     * @param array<string, mixed> $dados Array associativo com os dados a serem preenchidos.
+     * 
+     * @return static Nova instância da model preenchida com os dados permitidos.
+     */
+    public static function create(array $dados): static
     {
-        return array_filter(
-            array: $dados,
-            callback: fn($key) => $this->isFillable($key),
-            mode: ARRAY_FILTER_USE_KEY
-        );
+        $instance = new static;
+        foreach ($dados as $key => $value) {
+            if ($instance->isFillable($key)) {
+                $instance->$key = $value;
+            }
+        }
+        return $instance;
+    }
+
+    public function toArray(): array
+    {
+        return $this->attributes;
     }
 }

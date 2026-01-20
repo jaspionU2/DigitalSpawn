@@ -18,7 +18,5 @@ class UserRepository
     {
         $this->entityManager->persist($user);
         $this->entityManager->flush();
-
-        echo "Created Product with ID " . $user->getId() . "\n";
     }
 }

@@ -4,10 +4,11 @@ namespace App\Services;
 
 use App\Models\UserModel;
 use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManager;
 
 class UserService
 {
-    public function createUser(UserModel $user) : void
+    public function createUser(UserModel $user) :  void
     {
         $userRepository = new UserRepository();
         $userRepository->save($user);

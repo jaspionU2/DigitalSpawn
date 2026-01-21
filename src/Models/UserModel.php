@@ -11,6 +11,7 @@ use Doctrine\DBAL\Types\Types;
 class UserModel extends Model
 {
     protected array $fillable = ['name', 'email', 'password_hash'];
+    protected array $hidden = ['password_hash', 'created_at'];
 
     #[ORM\Id]
     #[ORM\Column(name: 'user_id', type: Types::INTEGER)]

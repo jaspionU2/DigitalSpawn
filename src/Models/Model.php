@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use JsonSerializable;
 use ReflectionClass;
 use ReflectionException;
 
@@ -45,6 +44,19 @@ class Model
      * @var array<string, mixed>
      */
     protected array $attributes = [];
+
+    /**
+     * Lista de atributos que devem ser ocultos ao converter para array.
+     * 
+     * Atributos listados aqui não aparecerão no resultado de toArray(),
+     * mesmo que sejam propriedades públicas ou protegidas da classe filha.
+     * Útil para ocultar dados sensíveis como senhas, tokens, etc.
+     * 
+     * @var array<int, string>
+     */
+
+    protected array $hidden = [];
+
 
     /**
      * Método mágico para definir o valor de um atributo.
@@ -133,6 +145,25 @@ class Model
     }
 
     /**
+     * Verifica se um atributo está na lista de propriedades ocultas.
+     * 
+     * Consulta o array $hidden para determinar se o atributo
+     * informado deve ser excluído da serialização.
+     * 
+     * @param string $value Nome do atributo a ser verificado.
+     * 
+     * @return bool True se o atributo deve ser oculto, false caso contrário.
+     */
+    protected function isHidden(string $value): bool
+    {
+        if (in_array($value, $this->hidden)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Cria uma nova instância da model com os dados fornecidos.
      * 
      * Percorre o array de dados e preenche apenas os atributos
@@ -155,8 +186,39 @@ class Model
         return $instance;
     }
 
+    /**
+     * Converte a model em um array associativo com seus dados.
+     * 
+     * Utiliza Reflection para descobrir todas as propriedades da classe filha
+     * (excluindo as propriedades da classe pai Model) e retorna apenas aquelas
+     * que não estão marcadas como ocultas em $hidden.
+     * 
+     * Este método é útil para serialização JSON, envio em respostas HTTP
+     * e comparação de dados.
+     * 
+     * @return array<string, mixed> Array associativo contendo as propriedades da model.
+     */
     public function toArray(): array
     {
-        return $this->attributes;
+        $reflectionClass = new ReflectionClass($this);
+        $properties = $reflectionClass->getProperties();
+  
+        $parentClassReflection = $reflectionClass->getParentClass();
+        $parentProperties = $parentClassReflection->getProperties();
+        
+        $parentPropertieName = [];
+        foreach ($parentProperties as $propertie) {
+            $parentPropertieName[] = $propertie->getName();
+        }
+
+        $result = [];
+        foreach ($properties as $propertie) {
+            $propertieName = $propertie->getName();
+            if (!in_array($propertieName, $parentPropertieName) && !$this->isHidden($propertieName)) {
+                $result[$propertieName] = $propertie->getValue($this);
+            }
+        }
+
+        return $result;
     }
 }

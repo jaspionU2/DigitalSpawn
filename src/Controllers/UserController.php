@@ -19,11 +19,11 @@ public function createUser(ServerRequestInterface $request) : ResponseInterface
             'password_hash' => $password
         ]);
 
-        dump($user);
+        // dump($user);
 
         $userService = new UserService;
         $userService->createUser($user);
 
-        return new JsonResponse(['status' => 'ok', 'user' => $user->getId()], encodingOptions: JSON_PRETTY_PRINT);
+        return new JsonResponse(['status' => 'ok', 'user' => $user->toArray()], encodingOptions: JSON_PRETTY_PRINT);
     }
 }

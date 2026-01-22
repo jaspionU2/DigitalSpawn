@@ -2,12 +2,18 @@
 
 namespace App\Controllers;
 
+use App\Factories\TwigFactory;
+use Twig\Extension\DebugExtension;
+
 class Controller
 {
-    /**
-     * @var array<int, string>
-     */
-    protected array $fillable = [];
-
+    protected function render(string $template, array $context = []) : string
+    {
+        $twig = TwigFactory::createTwigEnvironment();
+        return $twig->render(
+            $template, 
+            $context
+        );
+    }
     
 }

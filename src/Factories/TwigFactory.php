@@ -51,6 +51,8 @@ class TwigFactory
         if (!empty(self::$environmentOptions)) return self::$environmentOptions;
 
         $pathRoot = dirname(__DIR__, 2);
+        // dd($pathRoot);
+        if ($pathToCache == '') $pathToCache = $pathRoot . '/var/cache/twig';
 
         try {
             $dotenv = Dotenv::createImmutable($pathRoot);
@@ -60,9 +62,10 @@ class TwigFactory
 
         return self::$environmentOptions = [
             'debug' => strtolower($_ENV['APP_ENV'] ?? '') === 'dev',
-            'cache' => $pathRoot . '/' . $_ENV['TWIG_CACHE_PATH'] ?? $pathToCache,
+            'cache' => $pathRoot . $_ENV['TWIG_CACHE_PATH'] ?? $pathToCache,
             'autoreload' => true
         ];
+        
     }
 
     /**
@@ -92,7 +95,7 @@ class TwigFactory
         ?ExtensionInterface $extension = null
     ): Environment {
         if (empty($paths)) {
-            $projectRoot = dirname(__DIR__, 2);
+            $projectRoot = dirname(__FILE__, 3);
             $paths = [
                 $projectRoot . '/src/Views'
             ];
@@ -100,8 +103,8 @@ class TwigFactory
 
         $loader = self::getLoader($paths);
 
-        if (empty($pathToCache)) {
-            $projectRoot = dirname(__DIR__, 2);
+        if (is_null($pathToCache)) {
+            $projectRoot = dirname(__FILE__, 3);
             $pathToCache = $projectRoot . '/var/cache/twig';
         }
 

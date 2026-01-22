@@ -1,4 +1,7 @@
 composer.phar
 .env
 /vendor/
-/.devcontainer
+/devcontainer
+# Cache directories
+var/cache/
+var/log/

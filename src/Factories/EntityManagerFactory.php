@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace App\Factories;
 
@@ -9,9 +7,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMSetup;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Factories\DbalConnectionFactory;
-use Dotenv\Dotenv;
-use Dotenv\Exception\InvalidFileException;
-use Dotenv\Exception\InvalidPathException;
+
 
 /**
  * Classe responsável pela criação e gerenciamento do EntityManager do Doctrine ORM.
@@ -58,7 +54,7 @@ class EntityManagerFactory
     ): void {
         self::$config = $params;
     }
-
+    
     /**
      * Cria e configura uma nova instância do EntityManager.
      * 
@@ -70,7 +66,7 @@ class EntityManagerFactory
      *
      * @return EntityManagerInterface Nova instância configurada do EntityManager
      */
-    public static function createEntityManager(): EntityManagerInterface
+    protected static function createEntityManager(): EntityManagerInterface
     {
         $pathDir = [dirname(__DIR__, 1) . '/Models'];
         $ormConfig = ORMSetup::createAttributeMetadataConfig(
@@ -87,9 +83,10 @@ class EntityManagerFactory
 
         if (!is_null(self::$config)) {
             $dbParams = self::$config;
+        } else {
+            $dbParams = DbalConnectionFactory::loadDatabaseConfig();
         }
 
-        $dbParams = DbalConnectionFactory::loadDatabaseConfig();
         $conn = DbalConnectionFactory::getDbalConnection(
             params: $dbParams,
             dsnParser: $dsnParser

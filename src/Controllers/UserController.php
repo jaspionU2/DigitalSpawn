@@ -8,7 +8,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Laminas\Diactoros\Response\JsonResponse;
 
-class UserController
+class UserController extends Controller
 {
 public function createUser(ServerRequestInterface $request) : ResponseInterface
     {
@@ -19,10 +19,9 @@ public function createUser(ServerRequestInterface $request) : ResponseInterface
             'password_hash' => $password
         ]);
 
-        // dump($user);
-
         $userService = new UserService;
         $userService->createUser($user);
+        
 
         return new JsonResponse(['status' => 'ok', 'user' => $user->toArray()], encodingOptions: JSON_PRETTY_PRINT);
     }

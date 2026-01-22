@@ -31,9 +31,9 @@ class EntityManagerFactory
      *
      * @return EntityManagerInterface Instância do EntityManager
      */
-    public static function getInstance(): EntityManagerInterface
+    public static function getInstance(bool $make = false): EntityManagerInterface
     {
-        if (is_null(self::$entityManager)) {
+        if (is_null(self::$entityManager) || $make) {
             return self::createEntityManager();
         }
 

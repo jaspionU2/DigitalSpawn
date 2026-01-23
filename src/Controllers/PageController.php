@@ -25,7 +25,7 @@ class PageController extends Controller
     public function registerPage(ServerRequestInterface $request): ResponseInterface
     {
         return new HtmlResponse(
-            $this->render('login.html.twig')
+            $this->render('register.html.twig')
         );
     }
 }

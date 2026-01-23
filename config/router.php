@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 use App\Controllers\PageController;
 use App\Controllers\UserController;
@@ -13,12 +15,15 @@ $responseFactory = new ResponseFactory;
 $jsonStrategy = new JsonStrategy($responseFactory);
 $router->setStrategy($jsonStrategy);
 
-
-$router->group('/', function (\League\Route\RouteGroup $route) 
+$router->group('/admin', function (\League\Route\RouteGroup $route) 
 {
-    $route->map(method: 'GET', path: '/', handler: [PageController::class, 'index']);
-    $route->map(method: 'GET', path: '/login', handler: [PageController::class, 'login']);
+    $route->map(method: 'GET', path: '/', handler: [PageController::class, 'homePage'])->setStrategy(new ApplicationStrategy());
+    $route->map(method: 'GET', path: '/login', handler: [PageController::class, 'loginPage'])->setStrategy(new ApplicationStrategy());
+    $route->map(method: 'GET', path: '/Register', handler: [PageController::class, 'registerPage'])->setStrategy(new ApplicationStrategy());
 }
-)->setStrategy(new ApplicationStrategy());
+)->setStrategy(new ApplicationStrategy);
+
 
 $router->map(method: 'POST', path: '/', handler: [UserController::class, 'createUser']);
+
+$router->map(method: 'POST', path: '/register', handler: [AuthenticationController::class, 'doRegister'])->setStrategy(new ApplicationStrategy());

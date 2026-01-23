@@ -8,14 +8,21 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class PageController extends Controller
 {
-    public function index(ServerRequestInterface $request) : ResponseInterface
+    public function homePage(ServerRequestInterface $request) : ResponseInterface
     {
         return new HtmlResponse(
             $this->render('index.html.twig')
         );
     }
 
-    public function login(ServerRequestInterface $request): ResponseInterface
+    public function loginPage(ServerRequestInterface $request): ResponseInterface
+    {
+        return new HtmlResponse(
+            $this->render('login.html.twig')
+        );
+    }
+
+    public function registerPage(ServerRequestInterface $request): ResponseInterface
     {
         return new HtmlResponse(
             $this->render('login.html.twig')

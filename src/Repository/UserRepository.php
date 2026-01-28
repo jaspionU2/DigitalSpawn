@@ -1,22 +1,27 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Repository;
 
 use App\Factories\EntityManagerFactory;
 use App\Models\UserModel;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Exception\ORMException;
+use Doctrine\ORM\ORMInvalidArgumentException;
 
 class UserRepository
 {
     private EntityManager $entityManager;
 
-    public function __construct(){
+    public function __construct()
+    {
         $this->entityManager = EntityManagerFactory::getInstance();
     }
 
-    public function save(UserModel $user) : void
+    public function save(UserModel $user): void
     {
-        $this->entityManager->persist($user);
-        $this->entityManager->flush();
+            $this->entityManager->persist($user);
+            $this->entityManager->flush();
     }
 }

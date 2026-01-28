@@ -5,3 +5,5 @@ composer.phar
 # Cache directories
 var/cache/
 var/log/
+# php-cs-fixer
+.php-cs-fixer.cache

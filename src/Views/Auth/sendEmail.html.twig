@@ -1,0 +1,270 @@
+{% extends "./Templates/registerScreen.html.twig" %}
+
+{% block title %}Verificação de E-mail - DigitalSpawn{% endblock title %}
+
+    {# Header #}
+    {% block header %}
+    <header class="bg-black border-b border-zinc-800">
+        <nav class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <a href="index.html" class="text-2xl font-bold">
+                    <span class="text-primary">Digital</span><span class="text-secondary">Spawn</span>
+                </a>
+                <div class="flex items-center space-x-4">
+                    <span class="text-zinc-400">Já verificou seu e-mail?</span>
+                    <a href="login.html" class="text-primary hover:text-opacity-80 transition font-semibold">
+                        Fazer Login
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </header>
+    {% endblock header %}
+
+
+    {# Verificantion Section #}
+    {% block content %}
+    <section class="py-12 min-h-screen">
+        <div class="container mx-auto px-6">
+            <div class="max-w-4xl mx-auto">
+                {# Header #}
+                <div class="text-center mb-10">
+                    <h1 class="text-4xl font-bold mb-4">
+                        Verifique seu <span class="text-primary">e-mail</span>
+                    </h1>
+                    <p class="text-zinc-400 text-lg">
+                        Estamos quase lá! Só falta mais um passo.
+                    </p>
+                </div>
+
+                <!-- Verification Card -->
+                <div class="bg-zinc-800 rounded-2xl border border-zinc-700 overflow-hidden">
+                    <!-- Progress Steps -->
+                    <div class="bg-black p-6 border-b border-zinc-700">
+                        <div class="flex items-center justify-between max-w-md mx-auto">
+                            <div class="flex flex-col items-center">
+                                <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center font-bold text-white">
+                                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                    </svg>
+                                </div>
+                                <span class="text-xs mt-2 text-green-500">Dados Pessoais</span>
+                            </div>
+                            <div class="flex-1 h-1 bg-primary mx-4"></div>
+                            <div class="flex flex-col items-center">
+                                <div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center font-bold text-black">
+                                    2
+                                </div>
+                                <span class="text-xs mt-2 text-primary">Segurança</span>
+                            </div>
+                            <div class="flex-1 h-1 bg-zinc-700 mx-4"></div>
+                            <div class="flex flex-col items-center">
+                                <div class="w-10 h-10 bg-zinc-700 rounded-full flex items-center justify-center font-bold">
+                                    3
+                                </div>
+                                <span class="text-xs mt-2 text-zinc-400">Concluir</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {# Content #}
+                    <div class="p-8 md:p-12">
+                        <!-- Email Icon -->
+                        <div class="text-center mb-8">
+                            <div class="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-primary to-secondary rounded-full mb-6">
+                                <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                                </svg>
+                            </div>
+                            <h2 class="text-2xl font-bold mb-4">Link de Confirmação Enviado!</h2>
+                            <p class="text-zinc-300 text-lg mb-2">
+                                Enviamos um link de verificação para:
+                            </p>
+                            <p class="text-primary text-xl font-semibold mb-6" id="userEmail">
+                                exemplo@email.com
+                            </p>
+                            <p class="text-zinc-400 max-w-2xl mx-auto">
+                                Clique no link que enviamos para seu e-mail para confirmar sua conta e começar a aproveitar nossas ofertas exclusivas!
+                            </p>
+                        </div>
+
+                        {# Instructions #}
+                        <div class="bg-zinc-900 rounded-xl p-6 mb-6 border border-zinc-700">
+                            <h3 class="font-bold text-lg mb-4 flex items-center">
+                                <svg class="w-5 h-5 mr-2 text-primary" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                                </svg>
+                                O que fazer agora?
+                            </h3>
+                            <ol class="space-y-3 text-zinc-300">
+                                <li class="flex items-start">
+                                    <span class="flex-shrink-0 w-6 h-6 bg-primary rounded-full flex items-center justify-center text-sm font-bold mr-3 mt-0.5">1</span>
+                                    <span>Abra sua caixa de entrada do e-mail</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="flex-shrink-0 w-6 h-6 bg-primary rounded-full flex items-center justify-center text-sm font-bold mr-3 mt-0.5">2</span>
+                                    <span>Procure por um e-mail de <strong class="text-white">no-reply@digitalspawn.com</strong></span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="flex-shrink-0 w-6 h-6 bg-primary rounded-full flex items-center justify-center text-sm font-bold mr-3 mt-0.5">3</span>
+                                    <span>Clique no botão ou link de verificação</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="flex-shrink-0 w-6 h-6 bg-primary rounded-full flex items-center justify-center text-sm font-bold mr-3 mt-0.5">4</span>
+                                    <span>Pronto! Sua conta estará ativada</span>
+                                </li>
+                            </ol>
+                        </div>
+
+                        <!-- Warning Box -->
+                        <div class="bg-yellow-900 bg-opacity-20 border border-yellow-700 rounded-xl p-4 mb-6">
+                            <div class="flex items-start">
+                                <svg class="w-6 h-6 text-yellow-500 mr-3 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                                </svg>
+                                <div>
+                                    <p class="text-yellow-200 font-semibold mb-1">Não encontrou o e-mail?</p>
+                                    <p class="text-yellow-100 text-sm">Verifique sua pasta de spam ou lixo eletrônico. Às vezes nossos e-mails podem parar lá.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Resend Button -->
+                        <div class="text-center mb-6">
+                            <p class="text-zinc-400 mb-4">
+                                Não recebeu o e-mail?
+                            </p>
+                            <button 
+                                id="resendButton"
+                                onclick="resendEmail()"
+                                class="bg-zinc-700 hover:bg-zinc-600 text-white font-semibold px-8 py-3 rounded-lg transition inline-flex items-center"
+                            >
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                                </svg>
+                                Reenviar E-mail
+                            </button>
+                            <p id="resendMessage" class="hidden text-green-500 mt-3 font-semibold">
+                                ✓ E-mail reenviado com sucesso!
+                            </p>
+                            <p id="cooldownMessage" class="hidden text-zinc-400 mt-3 text-sm">
+                                Aguarde <span id="countdown">60</span> segundos para reenviar novamente
+                            </p>
+                        </div>
+
+                        {# Divider #}
+                        <div class="relative my-8">
+                            <div class="absolute inset-0 flex items-center">
+                                <div class="w-full border-t border-zinc-700"></div>
+                            </div>
+                            <div class="relative flex justify-center text-sm">
+                                <span class="px-4 bg-zinc-800 text-zinc-400">ou</span>
+                            </div>
+                        </div>
+
+                        <!-- Alternative Actions -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <a 
+                                href="cadastro.html"
+                                class="bg-zinc-900 border border-zinc-700 hover:border-primary rounded-lg py-3 transition flex items-center justify-center space-x-2 text-zinc-300 hover:text-white"
+                            >
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+                                </svg>
+                                <span>Corrigir E-mail</span>
+                            </a>
+                            <a 
+                                href="suporte.html"
+                                class="bg-zinc-900 border border-zinc-700 hover:border-primary rounded-lg py-3 transition flex items-center justify-center space-x-2 text-zinc-300 hover:text-white"
+                            >
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"/>
+                                </svg>
+                                <span>Precisa de Ajuda?</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Security Info -->
+                <div class="mt-12 bg-zinc-800 rounded-xl border border-zinc-700 p-6">
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0">
+                            <svg class="w-8 h-8 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-lg font-bold mb-2">Sua segurança é nossa prioridade</h3>
+                            <p class="text-zinc-400 text-sm">
+                                A verificação de e-mail ajuda a proteger sua conta e garante que você possa recuperá-la caso necessário. Nunca compartilharemos seu e-mail com terceiros.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    {% endblock content %}
+
+
+    {% block script %}
+    <script>
+        // Simular e-mail do usuário (você pode pegar isso de localStorage ou URL params)
+        const userEmail = localStorage.getItem('userEmail') || 'exemplo@email.com';
+        document.getElementById('userEmail').textContent = userEmail;
+
+        let cooldownActive = false;
+        let cooldownTime = 60;
+
+        function resendEmail() {
+            if (cooldownActive) return;
+
+            const button = document.getElementById('resendButton');
+            const message = document.getElementById('resendMessage');
+            const cooldownMsg = document.getElementById('cooldownMessage');
+            const countdownSpan = document.getElementById('countdown');
+
+            // Desabilitar botão
+            button.disabled = true;
+            button.classList.add('opacity-50', 'cursor-not-allowed');
+
+            // Mostrar mensagem de sucesso
+            message.classList.remove('hidden');
+
+            // Aqui você faria a chamada real para reenviar o e-mail
+            console.log('Reenviando e-mail para:', userEmail);
+
+            setTimeout(() => {
+                message.classList.add('hidden');
+                cooldownMsg.classList.remove('hidden');
+                cooldownActive = true;
+
+                // Iniciar countdown
+                let remaining = cooldownTime;
+                countdownSpan.textContent = remaining;
+
+                const interval = setInterval(() => {
+                    remaining--;
+                    countdownSpan.textContent = remaining;
+
+                    if (remaining <= 0) {
+                        clearInterval(interval);
+                        cooldownMsg.classList.add('hidden');
+                        button.disabled = false;
+                        button.classList.remove('opacity-50', 'cursor-not-allowed');
+                        cooldownActive = false;
+                    }
+                }, 1000);
+            }, 2000);
+        }
+
+        // Verificar se há um e-mail nos parâmetros da URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const emailParam = urlParams.get('email');
+        if (emailParam) {
+            document.getElementById('userEmail').textContent = emailParam;
+            localStorage.setItem('userEmail', emailParam);
+        }
+    </script>
+    {% endblock script %}

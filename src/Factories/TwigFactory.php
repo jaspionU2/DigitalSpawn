@@ -4,14 +4,20 @@ declare(strict_types=1);
 
 namespace App\Factories;
 
+use function dirname;
+
 use Dotenv\Dotenv;
 use Dotenv\Exception\InvalidFileException;
 use Dotenv\Exception\InvalidPathException;
+
+use function is_null;
+use function strtolower;
+
 use Twig\Environment;
 use Twig\Extension\DebugExtension;
+use Twig\Extension\ExtensionInterface;
 use Twig\Loader\FilesystemLoader;
 use Twig\Loader\LoaderInterface;
-use Twig\Extension\ExtensionInterface;
 
 /**
  * Factory para criar e configurar instâncias do ambiente Twig.
@@ -26,53 +32,14 @@ class TwigFactory
      */
     protected static array $environmentOptions = [];
 
-    private function __construct() {}
-
-    /**
-     * Cria um carregador de templates do Twig para os caminhos especificados.
-     *
-     * @param array $paths Array contendo os caminhos dos diretórios de templates
-     * @return LoaderInterface Instância do carregador de templates
-     */
-    protected static function getLoader(
-        array $paths
-    ): LoaderInterface {
-        return new FilesystemLoader($paths);
-    }
-
-    /**
-     * Carrega as opções de configuração do ambiente Twig a partir de variáveis de ambiente, ou a partir de configurações ja setadas através do metodo 'setOption'. As 'option', setadas na classe tem prioridade sobre as variáveis de ambiente.
-     *
-     * @param string $pathToCache Caminho para o diretório de cache do Twig (padrão: '')
-     * @return array Array contendo as opções de configuração (debug, cache, autoreload)
-     */
-    protected static function loadOption(string $pathToCache = ''): array
+    private function __construct()
     {
-        if (!empty(self::$environmentOptions)) return self::$environmentOptions;
-
-        $pathRoot = dirname(__DIR__, 2);
-        // dd($pathRoot);
-        if ($pathToCache == '') $pathToCache = $pathRoot . '/var/cache/twig';
-
-        try {
-            $dotenv = Dotenv::createImmutable($pathRoot);
-            $dotenv->load();
-        } catch (InvalidFileException | InvalidPathException) {
-        }
-
-        return self::$environmentOptions = [
-            'debug' => strtolower($_ENV['APP_ENV'] ?? '') === 'dev',
-            'cache' => $pathRoot . $_ENV['TWIG_CACHE_PATH'] ?? $pathToCache,
-            'autoreload' => true
-        ];
-        
     }
 
     /**
      * Define manualmente as opções de configuração do ambiente Twig.
      *
      * @param array $options Array contendo as opções de configuração a serem aplicadas
-     * @return void
      */
     public static function setOption(array $options): void
     {
@@ -82,22 +49,23 @@ class TwigFactory
     /**
      * Cria e retorna uma instância configurada do ambiente Twig.
      *
-     * @param array $paths Array de caminhos para os diretórios de templates (padrão: '/src/Views')
-     * @param ?array $options Opções de configuração customizadas (opcional)
-     * @param ?string $pathToCache Caminho para o diretório de cache (opcional)
-     * @param ?ExtensionInterface $extension Extensão customizada do Twig a ser adicionada (opcional)
+     * @param array               $paths       Array de caminhos para os diretórios de templates (padrão: '/src/Views')
+     * @param ?array              $options     Opções de configuração customizadas (opcional)
+     * @param ?string             $pathToCache Caminho para o diretório de cache (opcional)
+     * @param ?ExtensionInterface $extension   Extensão customizada do Twig a ser adicionada (opcional)
+     *
      * @return Environment Instância configurada do ambiente Twig
      */
     public static function createTwigEnvironment(
         array $paths = [],
         ?array $options = null,
         ?string $pathToCache = null,
-        ?ExtensionInterface $extension = null
+        ?ExtensionInterface $extension = null,
     ): Environment {
         if (empty($paths)) {
             $projectRoot = dirname(__FILE__, 3);
             $paths = [
-                $projectRoot . '/src/Views'
+                $projectRoot . '/src/Views',
             ];
         }
 
@@ -110,7 +78,7 @@ class TwigFactory
 
         $twig = new Environment($loader, $options ?? self::loadOption($pathToCache));
 
-        if (strtolower($_ENV['APP_ENV'] ?? '') === 'dev') {
+        if ('dev' === strtolower($_ENV['APP_ENV'] ?? '')) {
             $twig->addExtension(new DebugExtension());
         }
 
@@ -119,5 +87,50 @@ class TwigFactory
         }
 
         return $twig;
+    }
+
+    /**
+     * Cria um carregador de templates do Twig para os caminhos especificados.
+     *
+     * @param array $paths Array contendo os caminhos dos diretórios de templates
+     *
+     * @return LoaderInterface Instância do carregador de templates
+     */
+    protected static function getLoader(
+        array $paths,
+    ): LoaderInterface {
+        return new FilesystemLoader($paths);
+    }
+
+    /**
+     * Carrega as opções de configuração do ambiente Twig a partir de variáveis de ambiente, ou a partir de configurações ja setadas através do metodo 'setOption'. As 'option', setadas na classe tem prioridade sobre as variáveis de ambiente.
+     *
+     * @param string $pathToCache Caminho para o diretório de cache do Twig (padrão: '')
+     *
+     * @return array Array contendo as opções de configuração (debug, cache, autoreload)
+     */
+    protected static function loadOption(string $pathToCache = ''): array
+    {
+        if (!empty(self::$environmentOptions)) {
+            return self::$environmentOptions;
+        }
+
+        $pathRoot = dirname(__DIR__, 2);
+        // dd($pathRoot);
+        if ('' == $pathToCache) {
+            $pathToCache = $pathRoot . '/var/cache/twig';
+        }
+
+        try {
+            $dotenv = Dotenv::createImmutable($pathRoot);
+            $dotenv->load();
+        } catch (InvalidFileException|InvalidPathException) {
+        }
+
+        return self::$environmentOptions = [
+            'debug' => 'dev' === strtolower($_ENV['APP_ENV'] ?? ''),
+            'cache' => $pathRoot . $_ENV['TWIG_CACHE_PATH'] ?? $pathToCache,
+            'autoreload' => true,
+        ];
     }
 }

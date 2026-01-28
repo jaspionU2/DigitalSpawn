@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Confirme seu e-mail</title>
+  <style>
+    body { font-family: Arial, sans-serif; background:#f4f6f8; margin:0; padding:0; }
+    .container { max-width:600px; margin:30px auto; background:#ffffff; border-radius:8px; padding:24px; }
+    .btn { display:inline-block; padding:12px 20px; background:#2563eb; color:#fff; text-decoration:none; border-radius:6px; }
+    .muted { color:#6b7280; font-size:14px; }
+    .code { font-family: monospace; background:#f1f5f9; padding:6px 10px; border-radius:4px; display:inline-block; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <p>Olá, <strong>{{name}}</strong>!</p>
+    <p>Para concluir seu cadastro, confirme seu e-mail clicando no botão abaixo:</p>
+
+    <p>
+      <a class="btn" href="{{confirmation_link}}" target="_blank" rel="noopener">
+        Confirmar e-mail
+      </a>
+    </p>
+
+    <p class="muted">
+      Se o botão não funcionar, copie e cole este link no navegador:
+    </p>
+    <p class="code">{{confirmation_link}}</p>
+
+    <p class="muted">Se você não solicitou esta conta, ignore esta mensagem.</p>
+  </div>
+</body>
+</html>

@@ -1,31 +1,35 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Factories;
 
+use function dirname;
+
 use Doctrine\DBAL\Tools\DsnParser;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\ORMSetup;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Factories\DbalConnectionFactory;
+use Doctrine\ORM\ORMSetup;
 
+use function is_null;
 
 /**
  * Classe responsável pela criação e gerenciamento do EntityManager do Doctrine ORM.
- * 
+ *
  * Implementa o padrão Singleton para garantir uma única instância do EntityManager
  * durante todo o ciclo de vida da aplicação.
  */
 class EntityManagerFactory
 {
-    /** @var EntityManagerInterface|null Instância única do EntityManager */
+    /** @var null|EntityManagerInterface Instância única do EntityManager */
     protected static ?EntityManagerInterface $entityManager = null;
 
-    /** @var array|null Configurações personalizadas do banco de dados */
+    /** @var null|array Configurações personalizadas do banco de dados */
     protected static ?array $config = null;
 
     /**
      * Obtém a instância do EntityManager.
-     * 
+     *
      * Retorna a instância existente do EntityManager ou cria uma nova
      * caso ainda não exista (padrão Singleton).
      *
@@ -42,22 +46,21 @@ class EntityManagerFactory
 
     /**
      * Define as configurações personalizadas do banco de dados.
-     * 
+     *
      * Permite sobrescrever as configurações padrão do banco de dados
      * antes da criação do EntityManager.
      *
      * @param array $params Array com os parâmetros de conexão do banco de dados
-     * @return void
      */
     public static function configure(
-        array $params
+        array $params,
     ): void {
         self::$config = $params;
     }
-    
+
     /**
      * Cria e configura uma nova instância do EntityManager.
-     * 
+     *
      * Responsável por:
      * - Configurar os metadados das entidades a partir dos atributos PHP
      * - Habilitar objetos lazy nativos
@@ -71,12 +74,12 @@ class EntityManagerFactory
         $pathDir = [dirname(__DIR__, 1) . '/Models'];
         $ormConfig = ORMSetup::createAttributeMetadataConfig(
             paths: $pathDir,
-            isDevMode: true
+            isDevMode: true,
         );
         $ormConfig->enableNativeLazyObjects(true);
 
         $dsnParser = new DsnParser([
-            'mysql' => 'pdo_mysql'
+            'mysql' => 'pdo_mysql',
         ]);
 
         $dbParams = null;
@@ -89,12 +92,12 @@ class EntityManagerFactory
 
         $conn = DbalConnectionFactory::getDbalConnection(
             params: $dbParams,
-            dsnParser: $dsnParser
+            dsnParser: $dsnParser,
         );
 
         self::$entityManager = new EntityManager(
             conn: $conn,
-            config: $ormConfig
+            config: $ormConfig,
         );
 
         return self::$entityManager;

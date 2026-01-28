@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Controllers;
 
@@ -8,24 +10,31 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class PageController extends Controller
 {
-    public function homePage(ServerRequestInterface $request) : ResponseInterface
+    public function homePage(ServerRequestInterface $request): ResponseInterface
     {
         return new HtmlResponse(
-            $this->render('index.html.twig')
+            $this->render('index.html.twig'),
         );
     }
 
     public function loginPage(ServerRequestInterface $request): ResponseInterface
     {
         return new HtmlResponse(
-            $this->render('login.html.twig')
+            $this->render('Auth/login.html.twig'),
         );
     }
 
     public function registerPage(ServerRequestInterface $request): ResponseInterface
     {
         return new HtmlResponse(
-            $this->render('register.html.twig')
+            $this->render('/Auth/register.html.twig'),
+        );
+    }
+
+    public function sendEmailPage(ServerRequestInterface $request): ResponseInterface
+    {
+        return new HtmlResponse(
+            $this->render('/Auth/sendEmail.html.twig'),
         );
     }
 }

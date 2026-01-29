@@ -6,7 +6,7 @@ namespace App\Controllers;
 
 use App\Factories\TwigFactory;
 
-class Controller
+class BaseController
 {
     protected function render(string $template, array $context = []): string
     {

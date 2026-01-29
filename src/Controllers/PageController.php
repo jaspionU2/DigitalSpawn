@@ -8,7 +8,7 @@ use Laminas\Diactoros\Response\HtmlResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-class PageController extends Controller
+class PageController extends BaseController
 {
     public function homePage(ServerRequestInterface $request): ResponseInterface
     {
@@ -34,7 +34,12 @@ class PageController extends Controller
     public function sendEmailPage(ServerRequestInterface $request): ResponseInterface
     {
         return new HtmlResponse(
-            $this->render('/Auth/sendEmail.html.twig'),
+            $this->render(
+                template: '/Auth/sendEmail.html.twig',
+                context: [
+                    'user_email' => $_SESSION['user.email']
+                ]
+            ),
         );
     }
 }

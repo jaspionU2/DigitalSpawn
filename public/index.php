@@ -9,6 +9,10 @@ require_once __DIR__ . '/../config/router.php';
 use Laminas\Diactoros\ServerRequestFactory;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 $request = ServerRequestFactory::fromGlobals(
     $_SERVER,
     $_GET,

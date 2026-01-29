@@ -81,7 +81,7 @@
                                 Enviamos um link de verificação para:
                             </p>
                             <p class="text-primary text-xl font-semibold mb-6" id="userEmail">
-                                exemplo@email.com
+                                {{ user_email }}
                             </p>
                             <p class="text-zinc-400 max-w-2xl mx-auto">
                                 Clique no link que enviamos para seu e-mail para confirmar sua conta e começar a aproveitar nossas ofertas exclusivas!
@@ -210,61 +210,7 @@
 
     {% block script %}
     <script>
-        // Simular e-mail do usuário (você pode pegar isso de localStorage ou URL params)
-        const userEmail = localStorage.getItem('userEmail') || 'exemplo@email.com';
-        document.getElementById('userEmail').textContent = userEmail;
-
-        let cooldownActive = false;
-        let cooldownTime = 60;
-
-        function resendEmail() {
-            if (cooldownActive) return;
-
-            const button = document.getElementById('resendButton');
-            const message = document.getElementById('resendMessage');
-            const cooldownMsg = document.getElementById('cooldownMessage');
-            const countdownSpan = document.getElementById('countdown');
-
-            // Desabilitar botão
-            button.disabled = true;
-            button.classList.add('opacity-50', 'cursor-not-allowed');
-
-            // Mostrar mensagem de sucesso
-            message.classList.remove('hidden');
-
-            // Aqui você faria a chamada real para reenviar o e-mail
-            console.log('Reenviando e-mail para:', userEmail);
-
-            setTimeout(() => {
-                message.classList.add('hidden');
-                cooldownMsg.classList.remove('hidden');
-                cooldownActive = true;
-
-                // Iniciar countdown
-                let remaining = cooldownTime;
-                countdownSpan.textContent = remaining;
-
-                const interval = setInterval(() => {
-                    remaining--;
-                    countdownSpan.textContent = remaining;
-
-                    if (remaining <= 0) {
-                        clearInterval(interval);
-                        cooldownMsg.classList.add('hidden');
-                        button.disabled = false;
-                        button.classList.remove('opacity-50', 'cursor-not-allowed');
-                        cooldownActive = false;
-                    }
-                }, 1000);
-            }, 2000);
-        }
-
-        // Verificar se há um e-mail nos parâmetros da URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const emailParam = urlParams.get('email');
-        if (emailParam) {
-            document.getElementById('userEmail').textContent = emailParam;
-            localStorage.setItem('userEmail', emailParam);
-        }
+        let email = document.getElementById('userEmail')
+        sessionStorage.setItem('user.email', email.innerText)
     </script>
     {% endblock script %}

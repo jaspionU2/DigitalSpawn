@@ -10,7 +10,7 @@ use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-class UserController extends Controller
+class UserController extends BaseController
 {
     public function createUser(ServerRequestInterface $request): ResponseInterface
     {

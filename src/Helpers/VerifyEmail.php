@@ -21,7 +21,8 @@ class VerifyEmail
         $dotenv->load();
 
         $token = $this->generateToken();
-        $confirmationLink = "{$_ENV['URI_EMAIL_CHECK']}{$token}";
+        $uri = $_ENV['URI_EMAIL_CHECK'] ?? 'http://localhost:8000/register/emailverify?token=';
+        $confirmationLink = "{$uri}{$token}";
 
         $body = file_get_contents(dirname(__DIR__) . '/Views/Auth/emailVerification.html');
         $body = str_replace(

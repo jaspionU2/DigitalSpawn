@@ -8,14 +8,16 @@ use App\Models\UserModel;
 use App\Schemas\UserSchema;
 use App\Services\EmailService;
 use App\Services\UserService;
+use Laminas\Diactoros\Response\HtmlResponse;
 use Laminas\Diactoros\Response\RedirectResponse;
 
 use function password_hash;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 
-class AuthenticationController extends Controller
+class AuthenticationController extends BaseController
 {
     public function doRegister(ServerRequestInterface $request): ResponseInterface
     {
@@ -39,9 +41,16 @@ class AuthenticationController extends Controller
             $emailService = new EmailService();
             $emailService->send($data['email'], $data['name']);
 
-            return new RedirectResponse('/register/sendEmail', 302);
+            $_SESSION['user.email'] = $data['email'];
+            
+            return new RedirectResponse('/register/sendEmail');
         }
 
         return new RedirectResponse('/register');
+    }
+
+    public function verifyEmailToken(ServerRequestInterface $request)
+    {
+        $token = $request->getQueryParams();
     }
 }

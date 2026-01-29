@@ -20,4 +20,14 @@ class EmailTokenRepository
         $this->entityManager->persist($token);
         $this->entityManager->flush();
     }
+
+    public function getToken($token)
+    {
+        $tokenEntity = $this->entityManager->getRepository('EmailTokenModel');
+        return $tokenEntity->findOneBy(
+            criteria: [
+                'token' => $token
+            ]
+        );
+    }
 }

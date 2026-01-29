@@ -8,14 +8,13 @@ use App\Models\UserModel;
 use App\Schemas\UserSchema;
 use App\Services\EmailService;
 use App\Services\UserService;
-use Laminas\Diactoros\Response\HtmlResponse;
+use Exception;
 use Laminas\Diactoros\Response\RedirectResponse;
 
 use function password_hash;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 
 class AuthenticationController extends BaseController
 {
@@ -51,6 +50,13 @@ class AuthenticationController extends BaseController
 
     public function verifyEmailToken(ServerRequestInterface $request)
     {
-        $token = $request->getQueryParams();
+        $data = $request->getQueryParams();
+
+        try {
+            $emailService = new EmailService();
+            $emailService->validateToken($data['token']);
+        } catch (Exception $e) {
+           return new RedirectResponse('/register/verify', 302);
+        }
     }
 }

@@ -6,6 +6,8 @@ use App\Helpers\VerifyEmail;
 use App\Models\EmailTokenModel;
 use App\Repository\EmailTokenRepository;
 use DateTime;
+use Exception;
+use Laminas\Diactoros\Response\RedirectResponse;
 
 class EmailService
 {
@@ -29,17 +31,22 @@ class EmailService
         $this->emailRepository->saveToken($emailTokenModel);
     }
 
-    public function validateToken(string $token) 
+    public function validateToken(string $token) : bool
     {
        $rowToken = $this->emailRepository->getToken($token);
        
        $datetimeNow = new DateTime(datetime: 'now');
        $datetimeTokenCreated = $rowToken->getTimestamp();
        $interval = $datetimeNow->diff($datetimeTokenCreated, true);
+       $intervalInMinutes = ($interval->h * 60) + ($interval->i);
 
-       if ($interval->i >= 30) {
-            
+       if ($intervalInMinutes >= 30 || $interval->d > 0) {
+            throw new Exception(
+                "O token informado não é mais valido", 
+                422
+            );
        }
-      
+
+       return $rowToken->getToken() === $token;
     }
 }

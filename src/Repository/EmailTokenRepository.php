@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Repository;
 
@@ -10,24 +12,25 @@ class EmailTokenRepository
 {
     protected EntityManager $entityManager;
 
-    public function __construct() 
+    public function __construct()
     {
         $this->entityManager = EntityManagerFactory::getInstance();
     }
 
-    public function saveToken(EmailTokenModel $token) : void
-    {   
+    public function getToken(string $token)
+    {
+        $tokenEntity = $this->entityManager->getRepository(EmailTokenModel::class);
+
+        return $tokenEntity->findOneBy([
+            'token' => $token,
+        ]);
+    }
+
+    public function saveToken(EmailTokenModel $token): void
+    {
         $this->entityManager->persist($token);
         $this->entityManager->flush();
     }
 
-    public function getToken($token)
-    {
-        $tokenEntity = $this->entityManager->getRepository('EmailTokenModel');
-        return $tokenEntity->findOneBy(
-            criteria: [
-                'token' => $token
-            ]
-        );
-    }
+    public function updateToken(): void {}
 }

@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Models;
 
@@ -32,6 +34,7 @@ class EmailTokenModel extends BaseModel
     public function setToken(string $token): self
     {
         $this->token = $token;
+
         return $this;
     }
 
@@ -43,6 +46,7 @@ class EmailTokenModel extends BaseModel
     public function setTimestamp(DateTime $timestamp): self
     {
         $this->timestamp = $timestamp;
+
         return $this;
     }
 }

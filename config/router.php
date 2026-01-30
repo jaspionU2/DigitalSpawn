@@ -24,9 +24,11 @@ $router->group(
         $route->map(method: 'GET', path: '/login', handler: [PageController::class, 'loginPage']);
         $route->map(method: 'GET', path: '/register', handler: [PageController::class, 'registerPage']);
         $route->map(method: 'GET', path: '/register/sendEmail', handler: [PageController::class, 'sendEmailPage']);
+        $route->map(method: 'GET', path: '/register/concluded', handler: [PageController::class, 'registerConcludedPage']);
     },
 )->setStrategy(new ApplicationStrategy());
 
 $router->map(method: 'POST', path: '/register', handler: [AuthenticationController::class, 'doRegister']);
+$router->map(method: 'GET', path: '/register/emailVerify', handler: [AuthenticationController::class, 'verifyEmailToken']);
 
 $router->map(method: 'POST', path: '/', handler: [UserController::class, 'createUser']);

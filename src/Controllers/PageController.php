@@ -37,9 +37,18 @@ class PageController extends BaseController
             $this->render(
                 template: '/Auth/sendEmail.html.twig',
                 context: [
-                    'user_email' => $_SESSION['user.email']
-                ]
+                    'user_email' => $_SESSION['user.email'],
+                ],
             ),
+        );
+    }
+
+    public function registerConcludedPage(ServerRequestInterface $request) : ResponseInterface
+    {
+        return new HtmlResponse(
+            $this->render(
+                template: '/Auth/registerCompleted.html.twig'
+            )
         );
     }
 }

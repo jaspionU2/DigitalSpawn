@@ -4,20 +4,25 @@ declare(strict_types=1);
 
 namespace App\Helpers;
 
+use App\Factories\MailerFactory;
+
+use function bin2hex;
 use function dirname;
+
+use Dotenv\Dotenv;
+
 use function file_get_contents;
 
-use App\Factories\MailerFactory;
-use Dotenv\Dotenv;
 use PHPMailer\PHPMailer\Exception;
 
+use function random_bytes;
 use function str_replace;
 
 class VerifyEmail
 {
     public function send(string $toAddres, string $toName): string
     {
-        $dotenv = Dotenv::createMutable(\dirname(__DIR__) . '/../');
+        $dotenv = Dotenv::createMutable(dirname(__DIR__) . '/../');
         $dotenv->load();
 
         $token = $this->generateToken();
@@ -45,7 +50,7 @@ class VerifyEmail
                 'name' => $toName,
             ],
             'subject' => 'Confirmation Email',
-            'message' => $body
+            'message' => $body,
         ]);
 
         $sent = $mail->send();
@@ -56,8 +61,8 @@ class VerifyEmail
         return $token;
     }
 
-    public function generateToken() : string
+    public function generateToken(): string
     {
-       return bin2hex(random_bytes(16));
+        return bin2hex(random_bytes(16));
     }
 }

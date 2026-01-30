@@ -41,8 +41,7 @@ class UserModel extends BaseModel
     protected DateTime $created_at;
 
     #[ORM\Column(name: 'email_verified', type: Types::BOOLEAN, options: ['default' => false])]
-    protected bool $email_verified = false;
-
+    protected bool $emailVerified = false;
 
     public function getId(): ?int
     {
@@ -86,11 +85,11 @@ class UserModel extends BaseModel
 
     public function isEmailVerified(): bool
     {
-        return $this->email_verified;
+        return $this->emailVerified;
     }
 
     public function setEmailVerified(bool $email_verified): void
     {
-        $this->email_verified = $email_verified;
+        $this->emailVerified = $email_verified;
     }
 }

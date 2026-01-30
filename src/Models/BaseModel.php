@@ -9,6 +9,7 @@ use function in_array;
 use ReflectionClass;
 use ReflectionException;
 
+use function strtolower;
 use function ucwords;
 
 /**
@@ -75,11 +76,12 @@ class BaseModel
         $reflectionClass = new ReflectionClass($this::class);
 
         $methodName = 'set' . ucwords($name);
+        // dd($methodName);
         if ($reflectionClass->hasMethod($methodName)) {
             try {
                 $method = $reflectionClass->getMethod($methodName);
                 $method->invoke(
-                    $reflectionClass->newInstance(),
+                    $this,
                     $value,
                 );
             } catch (ReflectionException) {
@@ -109,7 +111,7 @@ class BaseModel
                 $method = $reflectionClass->getMethod($methodName);
 
                 return $method->invoke(
-                    $reflectionClass->newInstance(),
+                    $this,
                 );
             } catch (ReflectionException) {
             }

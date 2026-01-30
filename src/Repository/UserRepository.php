@@ -7,8 +7,6 @@ namespace App\Repository;
 use App\Factories\EntityManagerFactory;
 use App\Models\UserModel;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Exception\ORMException;
-use Doctrine\ORM\ORMInvalidArgumentException;
 
 class UserRepository
 {
@@ -19,9 +17,30 @@ class UserRepository
         $this->entityManager = EntityManagerFactory::getInstance();
     }
 
-    public function save(UserModel $user): void
+    public function getUser(int $userId): UserModel
     {
-            $this->entityManager->persist($user);
-            $this->entityManager->flush();
+        return $this->entityManager->find(
+            className: UserModel::class,
+            id: $userId,
+        );
+    }
+
+    public function saveUser(UserModel $user): void
+    {
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
+    }
+
+    public function updateUser(int $id, array $data)
+    {
+        $user = $this->getUser($id);
+
+        foreach ($data as $propertie => $value) {
+            $user->$propertie = $value;
+            // dd($propertie);
+        }
+        // dd($user);
+
+        $this->entityManager->flush();
     }
 }

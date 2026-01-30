@@ -9,9 +9,20 @@ use App\Repository\UserRepository;
 
 class UserService
 {
+    protected UserRepository $userRepository;
+
+    public function __construct()
+    {
+        $this->userRepository = new UserRepository();
+    }
+
     public function createUser(UserModel $user): void
     {
-        $userRepository = new UserRepository();
-        $userRepository->save($user);
+        $this->userRepository->saveUser($user);
+    }
+
+    public function updateUser(int $id, array $data): void
+    {
+        $this->userRepository->updateUser($id, $data);
     }
 }

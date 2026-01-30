@@ -1,24 +1,8 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Validação de E-mail - DigitalSpawn</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#ce7e00',
-                        secondary: '#ca0505',
-                    }
-                }
-            }
-        }        
-    </script>
-</head>
-<body class="bg-zinc-900 text-white">
+{% extends "./Templates/registerScreen.html.twig" %}
+
+{% block title %}Confirmação de cadastro - DigitalSpawn{% endblock title %}
+
+    {% block header %}
     <!-- Header -->
     <header class="bg-black border-b border-zinc-800">
         <nav class="container mx-auto px-6 py-4">
@@ -29,7 +13,9 @@
             </div>
         </nav>
     </header>
+    {% endblock header %}
 
+    {% block content %}
     <!-- Validation Section -->
     <section class="py-12 min-h-screen flex items-center">
         <div class="container mx-auto px-6">
@@ -249,7 +235,9 @@
             </div>
         </div>
     </section>
+    {% endblock content %}
 
+    {% block footer %}
     <!-- Footer -->
     <footer class="bg-black py-8 border-t border-zinc-800">
         <div class="container mx-auto px-6">
@@ -265,10 +253,12 @@
             </div>
         </div>
     </footer>
+    {% endblock footer %}
 
+    {% block script %}
     <script>
         const validationSuccess = true;
-        let countdown = 5;
+        let countdown = 10;
 
         function updateCountdown() {
             const element = document.getElementById('countdown');
@@ -278,7 +268,7 @@
                     countdown--;
                     setTimeout(updateCountdown, 1000);
                 } else {
-                    window.location.href = 'index.html';
+                    window.location.href = '/';
                 }
             }
         }
@@ -297,5 +287,4 @@
             }
         }
     </script>
-</body>
-</html>
+    {% endblock script %}

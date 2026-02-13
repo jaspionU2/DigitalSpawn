@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Factories;
 
-use function dirname;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
@@ -49,12 +48,7 @@ class DbalConnectionFactory
      */
     public static function loadDatabaseConfig(?array $config = null): array|string
     {
-        $pathDir = dirname(__DIR__, 2);
-
         try {
-            $dotenv = Dotenv::createImmutable(paths: $pathDir);
-            $dotenv->load();
-
             if (!empty($_ENV['DB_URL'])) {
                 return $_ENV['DB_URL'];
             }
@@ -64,7 +58,7 @@ class DbalConnectionFactory
 
         return [
             'driver' => 'pdo_sqlite',
-            'path' => $pathDir . '/database.db',
+            'path' => ROOT_DIR_PATH . '/database.db',
         ];
     }
 }

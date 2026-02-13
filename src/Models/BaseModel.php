@@ -9,7 +9,6 @@ use function in_array;
 use ReflectionClass;
 use ReflectionException;
 
-use function strtolower;
 use function ucwords;
 
 /**

@@ -38,21 +38,18 @@ class MailerFactory
         ?string $password = null,
         ?string $port = null,
     ): PHPMailer {
-        $dotenv = Dotenv::createImmutable(dirname(__DIR__) . '/../');
-        $dotenv->load();
-
         if (is_null(self::$mailer)) {
             self::getInstance();
         }
 
         // self::$mailer->SMTPDebug = SMTP::DEBUG_SERVER;
         self::$mailer->isSMTP();
-        self::$mailer->Host = $host ?? $_ENV['MAILTRAP_HOST'];
+        self::$mailer->Host = $host ?? $_ENV['MAILTRAP_HOST'] ?? getenv('MAILTRAP_HOST');
         self::$mailer->SMTPAuth = true;
-        self::$mailer->Username = $username ?? $_ENV['MAILTRAP_USERNAME'];
-        self::$mailer->Password = $password ?? $_ENV['MAILTRAP_PASSWORD'];
+        self::$mailer->Username = $username ?? $_ENV['MAILTRAP_USERNAME'] ?? getenv('MAILTRAP_USERNAME');
+        self::$mailer->Password = $password ?? $_ENV['MAILTRAP_PASSWORD'] ?? getenv('MAILTRAP_PASSWORD');
         self::$mailer->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
-        self::$mailer->Port = $port ?? $_ENV['MAILTRAP_PORT'];
+        self::$mailer->Port = $port ?? $_ENV['MAILTRAP_PORT'] ?? getenv('MAILTRAP_PORT');
 
         self::$mailer->CharSet = PHPMailer::CHARSET_UTF8;
         self::$mailer->Encoding = 'base64';

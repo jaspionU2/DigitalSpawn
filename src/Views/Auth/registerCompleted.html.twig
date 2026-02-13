@@ -22,7 +22,8 @@
             <div class="max-w-2xl mx-auto">
                 
                 <!-- SUCCESS CONTENT -->
-                <div id="success-content" class="hidden">
+                {% if flashMessage.type == "success" %}
+                <div id="success-content" data-is-valid="{{ flash.Message ? 'true' : 'false' }}">
                     <!-- Card de Sucesso -->
                     <div class="bg-zinc-800 rounded-2xl border border-zinc-700 overflow-hidden">
                         <!-- Progress Steps -->
@@ -119,9 +120,11 @@
                         </div>
                     </div>
                 </div>
+                {% endif %}
 
                 <!-- ERROR CONTENT -->
-                <div id="error-content" class="hidden">
+                {% if flashMessage is not empty and flashMessage.type == 'validateError' %}
+                <div id="error-content">
                     <!-- Card de Erro -->
                     <div class="bg-zinc-800 rounded-2xl border border-zinc-700 overflow-hidden">
                         <!-- Progress Steps -->
@@ -182,7 +185,7 @@
                                 <ul class="space-y-3 text-zinc-400">
                                     <li class="flex items-start">
                                         <span class="text-secondary mr-2">•</span>
-                                        <span>O link de validação expirou (válido por 24 horas)</span>
+                                        <span>O link de validação expirou (válido por 30 minutos)</span>
                                     </li>
                                     <li class="flex items-start">
                                         <span class="text-secondary mr-2">•</span>
@@ -231,7 +234,7 @@
                         </div>
                     </div>
                 </div>
-
+                {% endif %}
             </div>
         </div>
     </section>
@@ -257,7 +260,8 @@
 
     {% block script %}
     <script>
-        const validationSuccess = true;
+        const succesContent = document.querySelector("#success-content")
+        const validationSuccess = succesContent.dataset.isValid;
         let countdown = 10;
 
         function updateCountdown() {
@@ -273,18 +277,11 @@
             }
         }
 
-        window.onload = function() {
-            const successDiv = document.getElementById('success-content');
-            const errorDiv = document.getElementById('error-content');
-            
+        window.addEventListener('load', () => {
             if (validationSuccess) {
-                successDiv.classList.remove('hidden');
-                errorDiv.classList.add('hidden');
-                updateCountdown();
-            } else {
-                successDiv.classList.add('hidden');
-                errorDiv.classList.remove('hidden');
+                updateCountdown()
             }
-        }
+        })
+       
     </script>
     {% endblock script %}

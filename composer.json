@@ -11,6 +11,14 @@
             "email": "gameraleatorio2202@outlook.com"
         }
     ],
+    "scripts": {
+        "start": [
+            "Composer\\Config::disableProcessTimeout", 
+            "php -S localhost:8000 -t public"
+        ],
+        "fix": "php-cs-fixer fix",
+        "kill-app": "sudo lsof -i :8000 | grep localhost:8000 | awk '{print $2}' | xargs -r sudo kill -9"
+    },
      "require": {
         "twig/twig": "^3.0",
         "doctrine/dbal": "^4.4",
@@ -24,7 +32,8 @@
         "symfony/var-dumper": "^7.4",
         "symfony/cache": "^8.0",
         "doctrine/orm": "^3.6",
-        "symfony/var-exporter": "^8.0"
+        "symfony/var-exporter": "^8.0",
+        "firebase/php-jwt": "^7.0"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.92"

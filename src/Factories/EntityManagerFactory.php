@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Factories;
 
-use function dirname;
-
 use Doctrine\DBAL\Tools\DsnParser;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -71,7 +69,7 @@ class EntityManagerFactory
      */
     protected static function createEntityManager(): EntityManagerInterface
     {
-        $pathDir = [dirname(__DIR__, 1) . '/Models'];
+        $pathDir = [APP_DIR_PATH . '/Models'];
         $ormConfig = ORMSetup::createAttributeMetadataConfig(
             paths: $pathDir,
             isDevMode: true,

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use DateTime;
+use DateTimeImmutable;
 use Doctrine\DBAL\Schema\DefaultExpression\CurrentTimestamp;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -37,8 +37,8 @@ class UserModel extends BaseModel
     #[ORM\Column(name: 'user_telephone', type: Types::STRING)]
     protected string $telephone;
 
-    #[ORM\Column(name: 'created_at', type: Types::DATETIME_MUTABLE, options: ['default' => new CurrentTimestamp()], insertable: false, updatable: false)]
-    protected DateTime $created_at;
+    #[ORM\Column(name: 'created_at', type: Types::DATETIMETZ_IMMUTABLE, options: ['default' => new CurrentTimestamp()], insertable: false, updatable: false)]
+    protected DateTimeImmutable $created_at;
 
     #[ORM\Column(name: 'email_verified', type: Types::BOOLEAN, options: ['default' => false])]
     protected bool $emailVerified = false;
@@ -63,7 +63,7 @@ class UserModel extends BaseModel
         return $this->password;
     }
 
-    public function getCreatedAt(): ?DateTime
+    public function getCreatedAt(): ?DateTimeImmutable
     {
         return $this->created_at;
     }

@@ -23,32 +23,29 @@ class UserSchema extends Schema
         $this->name = v::stringType()
             ->length(3, 100)
             ->notEmpty()
-            ->setName('name')
-        ;
+            ->setName('name');
 
         $this->lastname = v::stringType()
             ->length(3, 100)
             ->notEmpty()
-            ->setName('lastname')
-        ;
+            ->setName('lastname');
 
         $this->password = v::stringType()
             ->notEmpty()
             ->length(8, null)
             ->regex('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/')
-            ->setName('password')
-        ;
+            ->setName('password');
 
         $this->email = v::stringType()
             ->email()
             ->notEmpty()
-            ->setName('email')
-        ;
+            ->setName('email');
 
-        $this->telephone = v::stringType()
+        $this->telephone = v::optional(
+            v::stringType()
             ->notEmpty()
             ->length(11, 11)
             ->regex('/^[1-9][0-9]9[0-9]{8}$/')
-            ->setName('telephone');
+        )->setName('telephone');
     }
 }

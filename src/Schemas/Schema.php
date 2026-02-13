@@ -9,11 +9,11 @@ use ReflectionClass;
 
 class Schema
 {
-    public function validate(array $data, array $template = []): array
+    public function validate(array $data, array $template = [], $safeMode = true): array
     {
         $rules = $this->toArray();
 
-        return HelpValidate::validate($data, $rules, $template);
+        return HelpValidate::validate($data, $rules, $template, $safeMode);
     }
 
     protected function toArray(): array

@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\Exception\DatabaseException;
 use App\Factories\EntityManagerFactory;
 use App\Models\UserModel;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Exception\ORMException;
 
 class UserRepository
 {
@@ -17,30 +19,65 @@ class UserRepository
         $this->entityManager = EntityManagerFactory::getInstance();
     }
 
-    public function getUser(int $userId): UserModel
+    public function getUser(string $filter, mixed $value) : UserModel
     {
-        return $this->entityManager->find(
-            className: UserModel::class,
-            id: $userId,
-        );
+        $dql = "SELECT u FROM App\Models\UserModel u WHERE u.{$filter} = :value";
+
+        $query = $this->entityManager->createQuery($dql);
+        $query->setParameter(key: 'value', value: $value);
+
+        return $query->getOneOrNullResult();
+    }
+
+    public function getUserById(int $userId): UserModel|null
+    {
+        try {
+            $user = $this->entityManager->find(
+                className: UserModel::class,
+                id: $userId,
+            );
+
+            return $user ?: null;
+        } catch (ORMException $e) {
+            throw new DatabaseException(
+                message: "Error: não foi possivel buscar o usuario de id {$userId}",
+                statusCode: 500,
+                previous: $e,
+            );
+        }
     }
 
     public function saveUser(UserModel $user): void
     {
-        $this->entityManager->persist($user);
-        $this->entityManager->flush();
+        try {
+            $this->entityManager->persist($user);
+            $this->entityManager->flush();
+        } catch (ORMException $e) {
+            throw new DatabaseException(
+                message: "Error: não foi persistir o usuario no database, {$user->getEmail()}",
+                statusCode: 500,
+                previous: $e,
+            );
+        }
+
     }
 
     public function updateUser(int $id, array $data)
     {
-        $user = $this->getUser($id);
+        try {
+            $user = $this->getUserById($id);
 
-        foreach ($data as $propertie => $value) {
-            $user->$propertie = $value;
-            // dd($propertie);
+            foreach ($data as $propertie => $value) {
+                $user->$propertie = $value;
+            }
+
+            $this->entityManager->flush();
+        } catch (ORMException $e) {
+            throw new DatabaseException(
+                message: "Error: não foi possivel atualizar o usuario com id, {$user->getId()}",
+                statusCode: 500,
+                previous: $e,
+            );
         }
-        // dd($user);
-
-        $this->entityManager->flush();
     }
 }

@@ -63,17 +63,15 @@ class TwigFactory
         ?ExtensionInterface $extension = null,
     ): Environment {
         if (empty($paths)) {
-            $projectRoot = dirname(__FILE__, 3);
             $paths = [
-                $projectRoot . '/src/Views',
+                ROOT_DIR_PATH . '/src/Views',
             ];
         }
 
         $loader = self::getLoader($paths);
 
         if (is_null($pathToCache)) {
-            $projectRoot = dirname(__FILE__, 3);
-            $pathToCache = $projectRoot . '/var/cache/twig';
+            $pathToCache = CACHE_DIR_PATH . '/twig';
         }
 
         $twig = new Environment($loader, $options ?? self::loadOption($pathToCache));
@@ -114,23 +112,14 @@ class TwigFactory
         if (!empty(self::$environmentOptions)) {
             return self::$environmentOptions;
         }
-
-        $pathRoot = dirname(__DIR__, 2);
-        // dd($pathRoot);
+        
         if ('' == $pathToCache) {
-            $pathToCache = $pathRoot . '/var/cache/twig';
-        }
-
-        // dd($pathToCache);
-        try {
-            $dotenv = Dotenv::createImmutable($pathRoot);
-            $dotenv->load();
-        } catch (InvalidFileException|InvalidPathException) {
+            $pathToCache = CACHE_DIR_PATH . '/twig';
         }
 
         return self::$environmentOptions = [
             'debug' => 'dev' === strtolower($_ENV['APP_ENV'] ?? ''),
-            'cache' => $pathRoot . $_ENV['TWIG_CACHE_PATH'] ?? $pathToCache,
+            'cache' => ROOT_DIR_PATH . $_ENV['TWIG_CACHE_PATH'] ?? $pathToCache,
             'autoreload' => true,
         ];
     }
